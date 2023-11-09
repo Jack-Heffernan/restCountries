@@ -3,3 +3,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* body {
+    background-color: #121212 !important;
+  } */
+
+  a:link {
+
+    text-decoration: none;
+    color: black;
+    }
+
+  a:visited {
+    color: black;
+  }
+
+  
