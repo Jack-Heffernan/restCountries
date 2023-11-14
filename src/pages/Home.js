@@ -73,12 +73,25 @@ const Home = () => {
         return <CountryCard key={i} flag={country.flags.png} name={country.name.common} region={country.region} />;
     });
 
+    let region = countriesList.map((country) => {
+        return country.region;
+    });
+    
     return (
         <>
         <div className="search m-4">
             <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" value={term} onChange={handleChange} onKeyUp={handleKeyUp}/>
             <Button variant="Secondary" onClick={handleReset}>Reset</Button>
-        </div>
+
+            <div className="dropdown dropdown-bottom dropdown-end float-end">
+                <label label tabIndex={0} className="btn m-1">Region</label>
+                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                    <li><a>{region}</a></li>
+                    <li><a>Item 2</a></li>
+                </ul>
+            </div>
+</div>
+
         
         <Row className='mt-2 m-4' md={3} xs={1}>
             {countryCards}
