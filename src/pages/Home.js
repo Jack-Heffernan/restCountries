@@ -11,12 +11,15 @@ const Home = () => {
 
     const [countriesList, setCountriesList] = useState([]);
     const [term, setTerm] = useState([]);
+    const [selectedRegion, setSelectedRegion] = useState('');
+    const [regions, setRegions] = useState([]);
 
     useEffect(() => {
         axios.get(`${restURL}/all`)
         .then(response => {
             console.log(response.data);
             setCountriesList(response.data);
+            setRegions([...new Set(response.data.map(country => country.region))]);
         })
         .catch(error => {
             console.error(error);
@@ -33,12 +36,22 @@ const Home = () => {
     };
 
     const handleKeyUp = (e) => {
-        // run axios get gifs by search term
+        
         if(e.key === 'Enter'){
             searchCountry();
         }
         
     }
+
+    const handleRegionChange = (region) => {
+        setSelectedRegion(region);
+        if (region === 'All') {
+            getAll();
+        } else {
+            filterByRegion(region);
+        }
+    };
+
 
     const searchCountry = () => {
 
@@ -67,15 +80,22 @@ const Home = () => {
              .catch((error) => {
                 console.log(error);
              });
-    }
+    };
+
+    const filterByRegion = (region) => {
+        axios.get(`${restURL}/region/${region}`)
+            .then((response) => {
+                setCountriesList(response.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
 
     let countryCards = countriesList.map((country, i) => {
         return <CountryCard key={i} flag={country.flags.png} name={country.name.common} region={country.region} />;
     });
 
-    let region = countriesList.map((country) => {
-        return country.region;
-    });
     
     return (
         <>
@@ -84,12 +104,14 @@ const Home = () => {
             <Button variant="Secondary" onClick={handleReset}>Reset</Button>
 
             <div className="dropdown dropdown-bottom dropdown-end float-end">
-                <label label tabIndex={0} className="btn m-1">Region</label>
-                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a>{region}</a></li>
-                    <li><a>Item 2</a></li>
-                </ul>
-            </div>
+                    <label label tabIndex={0} className="btn m-1">Region</label>
+                    <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a onClick={() => handleRegionChange('All')}>All</a></li>
+                        {regions.map((region, i) => (
+                            <li key={region}><a onClick={() => handleRegionChange(region)}>{region}</a></li>
+                        ))}
+                    </ul>
+                </div>
 </div>
 
         
